@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 15, 2);
-            $table->foreignId('branch_id')->constrained()->onDelete('cascade');
             $table->foreignId('performed_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->enum('type', ['withdrawal', 'deposit']);
             $table->timestamps();

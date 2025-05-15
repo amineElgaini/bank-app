@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-        public function showLoginForm()
+        public function loginForm()
         {
             return view('auth.login');
         }
@@ -27,8 +27,23 @@ class LoginController extends Controller
                                  ->withInput();
             }
     
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect()->intended('/home');
+            if (Auth::attempt([
+                'email' => $request->email,
+                'password' => $request->password
+            ])) {
+                $user = Auth::user();
+                switch ($user->role) {
+                    case 'admin':
+                        return redirect()->intended('/admin/employees');
+                        
+                    case 'employee':
+                        return redirect()->intended('/employee/customers');
+                    
+                    case 'customer':
+                        return redirect()->intended('/customer');
+                    default:
+                        return redirect()->intended('/customer');
+                }
             }
     
             return redirect()->route('login')->withErrors(['email' => 'Invalid credentials'])->withInput();
